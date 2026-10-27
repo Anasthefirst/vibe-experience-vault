@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vibe Vault</title>
+    <style>
+      :root {
+        --bg: #070b14;
+        --bg2: #121d2a;
+        --panel: rgba(17, 25, 38, 0.83);
+        --panel-strong: rgba(24, 34, 48, 0.96);
+        --line: rgba(255,255,255,0.08);
+        --text: #edf4ff;
+        --muted: #9fb4c9;
+        --glow: #7fe7ff;
+        --pink: #ff6ec7;
+        --gold: #ffd166;
+        --lime: #7ef9a8;
+        --violet: #9a7dff;
+        --orange: #ff9f6e;
+      }
+
+      * { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        font-family: Inter, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(127, 231, 255, 0.18), transparent 20%),
+          radial-gradient(circle at top right, rgba(255, 110, 199, 0.14), transparent 25%),
+          linear-gradient(180deg, #070b14 0%, #0d1523 100%);
+        color: var(--text);
+      }
+
+      a { color: inherit; text-decoration: none; }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        backdrop-filter: blur(18px);
+        background: rgba(7, 11, 20, 0.7);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .topbar-inner {
+        max-width: 1500px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 16px 24px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .brand-badge {
+        width: 36px; height: 36px; border-radius: 12px;
+        background: linear-gradient(135deg, var(--glow), var(--pink));
+        display: grid; place-items: center;
+        box-shadow: 0 0 20px rgba(127, 231, 255, 0.8);
+        font-size: 18px;
+      }
+
+      .top-links {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .chip {
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .container {
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+
+      .hero {
+        margin-top: 18px;
+        padding: 34px 28px;
+        border-radius: 28px;
+        border: 1px solid var(--line);
+        background: linear-gradient(160deg, rgba(20, 29, 44, 0.82), rgba(9, 15, 24, 0.92));
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.4fr 0.8fr;
+        gap: 18px;
+        align-items: center;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(127, 231, 255, 0.08);
+        border: 1px solid rgba(127, 231, 255, 0.2);
+        color: var(--glow);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 18px 0 12px;
+        font-size: clamp(2.8rem, 5vw, 5rem);
+        letter-spacing: -0.06em;
+        line-height: 0.95;
+      }
+
+      .lead {
+        font-size: 1.08rem;
+        line-height: 1.7;
+        color: var(--muted);
+        max-width: 62ch;
+      }
+
+      .stats {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        margin-top: 26px;
+      }
+
+      .stat {
+        min-width: 150px;
+        padding: 16px 18px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(255,255,255,0.02);
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 1.6rem;
+        letter-spacing: -0.05em;
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 0.84rem;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+      }
+
+      .hero-card {
+        padding: 18px;
+        border-radius: 22px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      }
+
+      .mini-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .mini-pill {
+        padding: 14px 12px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,0.02);
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .section-wrap {
+        padding-top: 48px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 16px;
+        margin: 0 0 18px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: clamp(1.6rem, 2vw, 2.2rem);
+      }
+
+      .section-head span {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 14px;
+      }
+
+      .experience-card {
+        position: relative;
+        background: linear-gradient(180deg, rgba(18, 28, 41, 0.96), rgba(11, 17, 26, 0.98));
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 14px 14px 12px;
+        overflow: hidden;
+        min-height: 190px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      }
+
+      .experience-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(127, 231, 255, 0.35);
+        box-shadow: 0 16px 42px rgba(11, 17, 26, 0.36);
+      }
+
+      .experience-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--glow), var(--pink), var(--gold));
+        opacity: 0.8;
+      }
+
+      .experience-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 8px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .card-title {
+        margin: 18px 0 10px;
+        font-size: 1.2rem;
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+      }
+
+      .card-copy {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .card-actions {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .play-btn {
+        cursor: pointer;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--glow), var(--pink));
+        color: #061018;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: 11px;
+        padding: 10px 12px;
+        transition: transform 0.15s ease, filter 0.15s ease;
+      }
+
+      .play-btn:hover {
+        transform: scale(1.02);
+        filter: brightness(1.06);
+      }
+
+      .difficulty {
+        font-size: 11px;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        background: rgba(3, 6, 10, 0.72);
+        backdrop-filter: blur(10px);
+        z-index: 100;
+        padding: 22px;
+      }
+
+      .modal.open { display: flex; }
+
+      .modal-panel {
+        width: min(980px, 100%);
+        max-height: 88vh;
+        overflow: auto;
+        border-radius: 26px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(180deg, rgba(14, 22, 31, 0.98), rgba(8, 13, 19, 0.98));
+        box-shadow: 0 36px 90px rgba(0, 0, 0, 0.56);
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 20px 24px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .modal-title {
+        margin: 0;
+        font-size: clamp(1.7rem, 2vw, 2.6rem);
+        letter-spacing: -0.05em;
+      }
+
+      .close-btn {
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        font-size: 1.3rem;
+        cursor: pointer;
+      }
+
+      .modal-body {
+        padding: 18px 24px 24px;
+      }
+
+      .game-shell {
+        min-height: 420px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,0.02);
+        padding: 18px;
+      }
+
+      .game-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+      }
+
+      .hud-box {
+        min-width: 110px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,0.02);
+      }
+
+      .hud-box small {
+        display: block;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 10px;
+      }
+
+      .hud-box strong {
+        font-size: 1.3rem;
+      }
+
+      .game-stage {
+        position: relative;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(6, 10, 17, 0.96), rgba(16, 22, 31, 0.96));
+        min-height: 300px;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+
+      .ghost-button {
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        padding: 20px 28px;
+        border-radius: 16px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.12s ease, background 0.12s ease;
+      }
+
+      .ghost-button:hover { transform: translateY(-1px); }
+
+      .pulse-ring {
+        width: 120px; height: 120px; border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.3);
+        display: grid; place-items: center;
+        font-size: 2.3rem;
+        user-select: none;
+      }
+
+      .pulse-ring.ready { background: rgba(126, 249, 168, 0.12); border-color: rgba(126, 249, 168, 0.7); }
+      .pulse-ring.waiting { background: rgba(255, 145, 93, 0.08); border-color: rgba(255, 145, 93, 0.7); }
+      .pulse-ring.go { background: rgba(127, 231, 255, 0.12); border-color: rgba(127, 231, 255, 0.7); }
+
+      .tile-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(70px, 1fr));
+        gap: 12px;
+        width: min(320px, 80%);
+      }
+
+      .tile {
+        aspect-ratio: 1;
+        border: none;
+        border-radius: 14px;
+        cursor: pointer;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #091219;
+        transition: transform 0.12s ease, filter 0.12s ease;
+      }
+
+      .tile:hover { transform: translateY(-1px); filter: brightness(1.08); }
+
+      .tile.active {
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.26), 0 0 20px rgba(255,255,255,0.16);
+        transform: scale(1.02);
+      }
+
+      .arena {
+        position: relative;
+        width: min(100%, 560px);
+        height: 250px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        overflow: hidden;
+        background: radial-gradient(circle at center, rgba(127, 231, 255, 0.08), rgba(5, 10, 16, 1) 65%);
+      }
+
+      .player {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 30px;
+        height: 30px;
+        margin-left: -15px;
+        margin-top: -15px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--glow), var(--pink));
+        box-shadow: 0 0 18px rgba(127, 231, 255, 0.5);
+        transition: transform 0.04s linear;
+      }
+
+      .hazard {
+        position: absolute;
+        width: 18px; height: 18px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--orange), #ff5a67);
+        box-shadow: 0 0 18px rgba(255, 145, 93, 0.6);
+      }
+
+      .word-input {
+        width: min(100%, 440px);
+        padding: 14px 16px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        font-size: 1.1rem;
+        background: rgba(255,255,255,0.02);
+        color: var(--text);
+        outline: none;
+      }
+
+      .word-preview {
+        font-size: clamp(1.2rem, 2vw, 2.2rem);
+        letter-spacing: 0.06em;
+        margin-bottom: 16px;
+      }
+
+      .word-preview .correct { color: var(--lime); }
+      .word-preview .wrong { color: #ff7a7a; }
+
+      .memory-sequence {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .memory-step {
+        width: 52px; height: 52px; border-radius: 16px; border: 1px solid var(--line);
+        display: grid; place-items: center; font-size: 1.2rem; font-weight: 700;
+      }
+
+      .memory-step.current { outline: 2px solid rgba(255,255,255,0.5); box-shadow: 0 0 18px rgba(255,255,255,0.2); }
+
+      .status-bar {
+        margin-top: 16px;
+        height: 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--line); overflow: hidden;
+      }
+
+      .status-fill {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, var(--glow), var(--pink), var(--gold));
+      }
+
+      @media (max-width: 900px) {
+        .hero-grid { grid-template-columns: 1fr; }
+        .card-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="brand-badge">✦</div>
+          <span>Vibe Vault</span>
+        </div>
+        <div class="top-links" id="topLinks"></div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow">● Experience archive</div>
+            <h1>1000 tiny worlds in one page.</h1>
+            <p class="lead">
+              A whole vault of short-form, pulsing, weird little interactive moments — all tuned for a "vibe" instead of a "game" label.
+              Every section is a different slice of atmosphere, and every card opens into a scannable little challenge.
+            </p>
+            <div class="stats">
+              <div class="stat">
+                <strong id="totalCount">1000</strong>
+                <span>micro-experiences</span>
+              </div>
+              <div class="stat">
+                <strong>25</strong>
+                <span>mood categories</span>
+              </div>
+              <div class="stat">
+                <strong>∞</strong>
+                <span>weird energy</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-card">
+            <div class="eyebrow" style="margin-bottom: 10px;">Quick access</div>
+            <div class="mini-grid" id="heroQuick"></div>
+          </div>
+        </div>
+      </section>
+
+      <div id="experienceSections"></div>
+    </main>
+
+    <div class="modal" id="experienceModal" aria-hidden="true">
+      <div class="modal-panel">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalTitle">Experience</h3>
+          <button class="close-btn" id="closeModal" aria-label="Close experience">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="game-shell">
+            <div class="game-header">
+              <div class="hud-box"><small>Score</small><strong id="scoreValue">0</strong></div>
+              <div class="hud-box"><small>Timer</small><strong id="timerValue">12s</strong></div>
+              <div class="hud-box"><small>Mode</small><strong id="modeValue">Ready</strong></div>
+            </div>
+            <div class="game-stage" id="gameStage"></div>
+            <div class="status-bar"><div class="status-fill" id="statusFill"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const categories = [
+        { name: "Neon Tide", key: "neon" },
+        { name: "Silent Rooftops", key: "rooftops" },
+        { name: "Signal Bloom", key: "signal" },
+        { name: "Velvet Static", key: "static" },
+        { name: "Moonlit Drift", key: "moon" },
+        { name: "Afterglow Arcades", key: "arcade" },
+        { name: "Dreamline Chases", key: "dream" },
+        { name: "Circuit Gardens", key: "garden" },
+        { name: "Midnight Tides", key: "tides" },
+        { name: "Glass Haze", key: "glass" },
+        { name: "Skyline Echoes", key: "skyline" },
+        { name: "Starlit Loops", key: "loops" },
+        { name: "Velvet Fog", key: "fog" },
+        { name: "Solar Drift", key: "solar" },
+        { name: "Liminal Streets", key: "streets" },
+        { name: "Strange Bloom", key: "bloom" },
+        { name: "Cloud Circuit", key: "cloud" },
+        { name: "Nova Browsing", key: "nova" },
+        { name: "Wired Gardens", key: "wired" },
+        { name: "Cosmic Aftertaste", key: "cosmic" },
+        { name: "Soft Gravity", key: "gravity" },
+        { name: "Night Drizzle", key: "drizzle" },
+        { name: "Summer Reruns", key: "reruns" },
+        { name: "Echo Canyons", key: "canyon" },
+        { name: "Rainlight Rituals", key: "rituals" }
+      ];
+
+      const adjectives = [
+        "Drift", "Prism", "Nocturne", "Velvet", "Bloom", "Signal", "Golden", "Echo", "Mango", "Glass",
+        "Pixel", "Hush", "Orbit", "Nova", "Crimson", "Starry", "Flash", "Lunar", "Silver", "Comet",
+        "Radiant", "Mirror", "Spiral", "Cinder", "Soft", "Dawn", "Fable", "Quantum", "Rift", "Dream",
+        "Whisper", "Frost", "Solar", "Shimmer", "Tide", "Flicker", "Lilt", "Vivid", "Paper", "Night"
+      ];
+
+      const nouns = [
+        "Racer", "Bloom", "Grove", "Lantern", "Motel", "Harbor", "Rooftop", "Loop", "Cathedral", "Beacon",
+        "Drone", "Compass", "Horizon", "Junkyard", "Palace", "Tunnel", "Canopy", "Talisman", "Circuit", "Canyon",
+        "Breeze", "Glade", "Mirror", "Starlight", "Harbor", "Trail", "Kite", "Wave", "Murmur", "Button",
+        "Relay", "Cove", "Channel", "Pillar", "Sprinter", "Shift", "Cipher", "Riff", "Gazebo", "Prophecy"
+      ];
+
+      const blurbs = [
+        "a glowing little puzzle with a soft rush in the chest.",
+        "a quick spark of motion and rhythm tucked into a tiny world.",
+        "a warm micro challenge that feels like a secret level in a dream.",
+        "a brief rush of pressure, polish, and perfect timing.",
+        "a strange little cadence built for one more try.",
+        "a quick pocket of chaos wrapped in calm color.",
+        "a tiny room of reactions, sparks, and survival instinct.",
+        "a vibe test disguised as a slick little challenge.",
+        "a sharp beat of focus hidden inside a soft scene.",
+        "a compact burst of motion with just enough danger to feel alive."
+      ];
+
+      const difficultyLabels = ["Low", "Light", "Medium", "Wild", "Chaos"];
+      const allExperiences = [];
+
+      categories.forEach((category, categoryIndex) => {
+        for (let i = 0; i < 40; i++) {
+          const name = `${adjectives[(categoryIndex * 7 + i * 3) % adjectives.length]} ${nouns[(categoryIndex * 11 + i * 5) % nouns.length]}`;
+          const template = ["clickRush", "reactionBlink", "memoryLoop", "dodgeWave", "typePulse", "flipMatch"][((categoryIndex + i) % 6)];
+          const difficulty = difficultyLabels[(categoryIndex + i) % difficultyLabels.length];
+          allExperiences.push({
+            id: `${categoryIndex}-${i}`,
+            category: category.name,
+            categoryKey: category.key,
+            name,
+            template,
+            difficulty,
+            blurb: blurbs[(categoryIndex + i) % blurbs.length],
+            mood: `${category.name} / ${i + 1}`,
+            seed: (categoryIndex + 1) * 101 + i
+          });
+        }
+      });
+
+      const sectionRoot = document.getElementById('experienceSections');
+      const topLinks = document.getElementById('topLinks');
+      const heroQuick = document.getElementById('heroQuick');
+
+      categories.forEach((category, index) => {
+        const link = document.createElement('a');
+        link.href = `#${category.key}`;
+        link.className = 'chip';
+        link.textContent = category.name;
+        topLinks.appendChild(link);
+
+        const mini = document.createElement('div');
+        mini.className = 'mini-pill';
+        mini.textContent = category.name.split(' ')[0];
+        heroQuick.appendChild(mini);
+      });
+
+      categories.forEach((category, categoryIndex) => {
+        const categoryExperiences = allExperiences.filter(exp => exp.category === category.name);
+        const section = document.createElement('section');
+        section.id = category.key;
+        section.className = 'section-wrap';
+
+        const head = document.createElement('div');
+        head.className = 'section-head';
+        head.innerHTML = `
+          <h2>${category.name}</h2>
+          <span>${categoryExperiences.length} experiences</span>
+        `;
+
+        const grid = document.createElement('div');
+        grid.className = 'card-grid';
+
+        categoryExperiences.forEach((experience) => {
+          const card = document.createElement('article');
+          card.className = 'experience-card';
+
+          const top = document.createElement('div');
+          top.className = 'experience-meta';
+          top.innerHTML = `
+            <span class="tag">${experience.category}</span>
+            <span>${experience.difficulty}</span>
+          `;
+
+          const title = document.createElement('h3');
+          title.className = 'card-title';
+          title.textContent = experience.name;
+
+          const blurb = document.createElement('div');
+          blurb.className = 'card-copy';
+          blurb.textContent = experience.blurb;
+
+          const actions = document.createElement('div');
+          actions.className = 'card-actions';
+          actions.innerHTML = `
+            <button class="play-btn" type="button">Enter vibe</button>
+            <span class="difficulty">${experience.template}</span>
+          `;
+
+          actions.querySelector('.play-btn').addEventListener('click', () => openExperience(experience));
+
+          card.appendChild(top);
+          card.appendChild(title);
+          card.appendChild(blurb);
+          card.appendChild(actions);
+          grid.appendChild(card);
+        });
+
+        section.appendChild(head);
+        section.appendChild(grid);
+        sectionRoot.appendChild(section);
+      });
+
+      document.getElementById('totalCount').textContent = allExperiences.length;
+
+      const modal = document.getElementById('experienceModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const closeModalBtn = document.getElementById('closeModal');
+      const gameStage = document.getElementById('gameStage');
+      const scoreValue = document.getElementById('scoreValue');
+      const timerValue = document.getElementById('timerValue');
+      const modeValue = document.getElementById('modeValue');
+      const statusFill = document.getElementById('statusFill');
+
+      let currentGame = null;
+      let currentTimer = null;
+      let currentCleanup = null;
+
+      function setModalOpen(isOpen) {
+        modal.classList.toggle('open', isOpen);
+        modal.setAttribute('aria-hidden', String(!isOpen));
+      }
+
+      closeModalBtn.addEventListener('click', () => {
+        setModalOpen(false);
+        clearInterval(currentTimer);
+        currentTimer = null;
+        if (currentCleanup) currentCleanup();
+        currentCleanup = null;
+        currentGame = null;
+        gameStage.innerHTML = '';
+      });
+
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+          closeModalBtn.click();
+        }
+      });
+
+      function openExperience(experience) {
+        modalTitle.textContent = experience.name;
+        scoreValue.textContent = '0';
+        timerValue.textContent = '12s';
+        modeValue.textContent = 'Ready';
+        statusFill.style.width = '0%';
+        setModalOpen(true);
+
+        if (currentCleanup) currentCleanup();
+        clearInterval(currentTimer);
+        currentTimer = null;
+
+        currentGame = experience;
+        gameStage.innerHTML = '';
+
+        switch (experience.template) {
+          case 'clickRush': initClickRush(); break;
+          case 'reactionBlink': initReactionBlink(); break;
+          case 'memoryLoop': initMemoryLoop(); break;
+          case 'dodgeWave': initDodgeWave(); break;
+          case 'typePulse': initTypePulse(); break;
+          case 'flipMatch': initFlipMatch(); break;
+          default: initClickRush();
+        }
+      }
+
+      function updateHud(score, timer, mode, percent) {
+        scoreValue.textContent = String(score);
+        timerValue.textContent = `${timer}s`;
+        modeValue.textContent = mode;
+        statusFill.style.width = `${percent}%`;
+      }
+
+      function initClickRush() {
+        let score = 0;
+        let timeLeft = 12;
+        let claimed = false;
+
+        const button = document.createElement('button');
+        button.className = 'ghost-button';
+        button.textContent = 'Tap the pulse';
+        button.style.fontSize = '1.6rem';
+        button.style.padding = '24px 36px';
+        button.addEventListener('click', () => {
+          if (claimed) return;
+          score += 1;
+          updateHud(score, timeLeft, 'Pulse', (score / 20) * 100);
+          button.style.transform = 'scale(0.98)';
+          setTimeout(() => button.style.transform = 'scale(1)', 80);
+          const size = 120 + (score % 6) * 12;
+          button.style.width = `${size}px`;
+          button.style.height = `${size}px`;
+          button.style.borderRadius = '50%';
+        });
+
+        gameStage.appendChild(button);
+        currentTimer = setInterval(() => {
+          timeLeft -= 1;
+          if (timeLeft <= 0) {
+            timeLeft = 0;
+            claimed = true;
+            updateHud(score, timeLeft, 'Score', Math.min(100, (score / 30) * 100));
+            button.disabled = true;
+            button.textContent = `Final score: ${score}`;
+            clearInterval(currentTimer);
+            return;
+          }
+          updateHud(score, timeLeft, 'Pulse', Math.min(100, (score / 20) * 100));
+        }, 1000);
+      }
+
+      function initReactionBlink() {
+        let score = 0;
+        let timeLeft = 12;
+        let waiting = true;
+        let activeTimer = null;
+
+        const ring = document.createElement('div');
+        ring.className = 'pulse-ring waiting';
+        ring.textContent = '●';
+        ring.addEventListener('click', () => {
+          if (!waiting) {
+            score += 1;
+            updateHud(score, timeLeft, 'Hit', (score / 15) * 100);
+            ring.className = 'pulse-ring ready';
+            ring.textContent = '✓';
+            waiting = true;
+            clearTimeout(activeTimer);
+            activeTimer = setTimeout(triggerSignal, 700);
+          } else {
+            updateHud(score, timeLeft, 'Bad read', Math.max(0, (score / 15) * 100));
+          }
+        });
+
+        function triggerSignal() {
+          waiting = false;
+          ring.className = 'pulse-ring go';
+          ring.textContent = 'GO';
+          activeTimer = setTimeout(() => {
+            if (!waiting) {
+              ring.className = 'pulse-ring waiting';
+              ring.textContent = '…';
+              waiting = true;
+            }
+          }, 1100);
+        }
+
+        gameStage.appendChild(ring);
+        triggerSignal();
+
+        currentTimer = setInterval(() => {
+          timeLeft -= 1;
+          if (timeLeft <= 0) {
+            clearInterval(currentTimer);
+            clearTimeout(activeTimer);
+            timeLeft = 0;
+            updateHud(score, timeLeft, 'Done', Math.min(100, (score / 18) * 100));
+            ring.textContent = `• ${score}`;
+            ring.className = 'pulse-ring ready';
+            return;
+          }
+          updateHud(score, timeLeft, waiting ? 'Wait' : 'Go', Math.min(100, (score / 18) * 100));
+        }, 1000);
+      }
+
+      function initMemoryLoop() {
+        const sequence = [];
+        let playerIndex = 0;
+        let round = 1;
+        let score = 0;
+        let timeLeft = 12;
+
+        function addStep() {
+          const next = Math.floor(Math.random() * 5) + 1;
+          sequence.push(next);
+          renderSequence();
+          setTimeout(() => {
+            const seqDivs = [...document.querySelectorAll('.memory-step')];
+            seqDivs.forEach(el => el.classList.remove('current')); 
+            setTimeout(() => {
+              playerIndex = 0;
+            }, 180);
+          }, 700 + sequence.length * 120);
+        }
+
+        function renderSequence() {
+          const wrap = document.createElement('div');
+          wrap.className = 'memory-sequence';
+          sequence.forEach((value, idx) => {
+            const cell = document.createElement('div');
+            cell.className = 'memory-step';
+            cell.textContent = value;
+            if (idx === sequence.length - 1) cell.classList.add('current');
+            cell.style.background = ['#7fe7ff', '#ff6ec7', '#ffd166', '#7ef9a8', '#9a7dff'][value - 1];
+            wrap.appendChild(cell);
+          });
+          gameStage.innerHTML = '';
+          gameStage.appendChild(wrap);
+        }
+
+        const palette = ['#7fe7ff', '#ff6ec7', '#ffd166', '#7ef9a8', '#9a7dff'];
+        const tiles = [];
+        for (let i = 1; i <= 5; i++) {
+          const btn = document.createElement('button');
+          btn.className = 'tile';
+          btn.textContent = i;
+          btn.style.background = palette[i - 1];
+          btn.addEventListener('click', () => {
+            if (playerIndex >= sequence.length) return;
+            btn.classList.add('active');
+            setTimeout(() => btn.classList.remove('active'), 140);
+            if (Number(btn.textContent) !== sequence[playerIndex]) {
+              updateHud(score, timeLeft, 'Mismatch', Math.max(0, (score / 18) * 100));
+              return;
+            }
+            playerIndex += 1;
+            score += 1;
+            updateHud(score, timeLeft, 'Loop', Math.min(100, (score / 20) * 100));
+            if (playerIndex === sequence.length) {
+              round += 1;
+              setTimeout(() => {
+                addStep();
+              }, 300);
+            }
+          });
+          tiles.push(btn);
+        }
+
+        const grid = document.createElement('div');
+        grid.className = 'tile-grid';
+        tiles.forEach(tile => grid.appendChild(tile));
+        gameStage.appendChild(grid);
+
+        addStep();
+
+        currentTimer = setInterval(() => {
+          timeLeft -= 1;
+          if (timeLeft <= 0) {
+            timeLeft = 0;
+            clearInterval(currentTimer);
+            updateHud(score, timeLeft, 'Done', Math.min(100, (score / 24) * 100));
+            return;
+          }
+          updateHud(score, timeLeft, 'Loop', Math.min(100, (score / 20) * 100));
+        }, 1000);
+      }
+
+      function initDodgeWave() {
+        let score = 0;
+        let timeLeft = 12;
+        let playerX = 50;
+        let playerY = 50;
+        let hazards = [];
+
+        const arena = document.createElement('div');
+        arena.className = 'arena';
+        const player = document.createElement('div');
+        player.className = 'player';
+        arena.appendChild(player);
+        gameStage.appendChild(arena);
+
+        arena.addEventListener('mousemove', (event) => {
+          const rect = arena.getBoundingClientRect();
+          const x = ((event.clientX - rect.left) / rect.width) * 100;
+          const y = ((event.clientY - rect.top) / rect.height) * 100;
+          playerX = Math.max(10, Math.min(90, x));
+          playerY = Math.max(10, Math.min(90, y));
+          player.style.left = `${playerX}%`;
+          player.style.top = `${playerY}%`;
+        });
+
+        function spawnHazard() {
+          const h = document.createElement('div');
+          h.className = 'hazard';
+          h.style.left = `${Math.random() * 90 + 5}%`;
+          h.style.top = `-20px`;
+          arena.appendChild(h);
+          hazards.push({
+            el: h,
+            x: parseFloat(h.style.left),
+            y: -10,
+            speed: 0.8 + Math.random() * 1.6
+          });
+        }
+
+        function tick() {
+          const nextHazards = [];
+          hazards.forEach((hazard) => {
+            hazard.y += hazard.speed;
+            hazard.el.style.top = `${hazard.y}%`;
+            const dx = Math.abs(playerX - hazard.x);
+            const dy = Math.abs(playerY - hazard.y);
+            if (dx < 5 && dy < 5) {
+              score += 1;
+              hazard.el.remove();
+              updateHud(score, timeLeft, 'Survive', Math.min(100, (score / 20) * 100));
+              return;
+            }
+            if (hazard.y < 100) nextHazards.push(hazard);
+            else hazard.el.remove();
+          });
+          hazards = nextHazards;
+          if (Math.random() < 0.08) spawnHazard();
+        }
+
+        currentCleanup = () => {
+          clearInterval(currentTimer);
+          document.querySelectorAll('.hazard').forEach(el => el.remove());
+        };
+
+        currentTimer = setInterval(() => {
+          timeLeft -= 1;
+          tick();
+          if (timeLeft <= 0) {
+            timeLeft = 0;
+            clearInterval(currentTimer);
+            updateHud(score, timeLeft, 'Final', Math.min(100, (score / 20) * 100));
+            return;
+          }
+          updateHud(score, timeLeft, 'Dodge', Math.min(100, (score / 20) * 100));
+        }, 100);
+      }
+
+      function initTypePulse() {
+        const phrase = 'glow fade sync';
+        let score = 0;
+        let timeLeft = 12;
+
+        const preview = document.createElement('div');
+        preview.className = 'word-preview';
+        preview.innerHTML = phrase.split('').map((ch, index) => `<span>${ch}</span>`).join('');
+        gameStage.appendChild(preview);
+
+        const input = document.createElement('input');
+        input.className = 'word-input';
+        input.placeholder = 'Type the phrase';
+        input.autocomplete = 'off';
+        input.addEventListener('input', () => {
+          const value = input.value;
+          const correct = phrase.slice(0, value.length);
+          let html = '';
+          for (let i = 0; i < phrase.length; i++) {
+            const ch = phrase[i];
+            if (i < value.length) {
+              html += `<span class="${value[i] === ch ? 'correct' : 'wrong'}">${ch}</span>`;
+            } else {
+              html += `<span>${ch}</span>`;
+            }
+          }
+          preview.innerHTML = html;
+          if (value === phrase) {
+            score += 1;
+            input.value = '';
+            updateHud(score, timeLeft, 'Typed', Math.min(100, (score / 10) * 100));
+          }
+        });
+
+        gameStage.appendChild(input);
+
+        currentTimer = setInterval(() => {
+          timeLeft -= 1;
+          if (timeLeft <= 0) {
+            timeLeft = 0;
+            clearInterval(currentTimer);
+            updateHud(score, timeLeft, 'Done', Math.min(100, (score / 10) * 100));
+            return;
+          }
+          updateHud(score, timeLeft, 'Type', Math.min(100, (score / 10) * 100));
+        }, 1000);
+      }
+
+      function initFlipMatch() {
+        let score = 0;
+        let timeLeft = 12;
+        const symbols = ['✦', '◉', '✧', '⬢', '✺', '✹'];
+        const cards = [];
+        let firstCard = null;
+        let secondCard = null;
+        let lock = false;
+
+        const set = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
+        const grid = document.createElement('div');
+        grid.className = 'tile-grid';
+        grid.style.gridTemplateColumns = 'repeat(4, minmax(54px, 1fr))';
+
+        function reveal(card, val) {
+          card.textContent = val;
+          card.style.background = '#d8f3ff';
+          card.style.color = '#091219';
+        }
+
+        function hide(card) {
+          card.textContent = '?';
+          card.style.background = '#202d3a';
+          card.style.color = '#edf4ff';
+        }
+
+        set.forEach((symbol, index) => {
+          const card = document.createElement('button');
+          card.className = 'tile';
+          card.textContent = '?';
+          card.style.background = '#202d3a';
+          card.style.fontSize = '1.2rem';
+          card.addEventListener('click', () => {
+            if (lock || card.dataset.done === 'true' || card.dataset.flipped === 'true') return;
+            card.dataset.flipped = 'true';
+            reveal(card, symbol);
+            if (!firstCard) {
+              firstCard = card;
+              return;
+            }
+            secondCard = card;
+            lock = true;
+
+            if (firstCard.textContent === secondCard.textContent) {
+              score += 1;
+              firstCard.dataset.done = 'true';
+              secondCard.dataset.done = 'true';
+              firstCard = null;
+              secondCard = null;
+              lock = false;
+              updateHud(score, timeLeft, 'Match', Math.min(100, (score / 12) * 100));
+            } else {
+              updateHud(score, timeLeft, 'Retry', Math.min(100, (score / 12) * 100));
+              setTimeout(() => {
+                hide(firstCard);
+                hide(secondCard);
+                firstCard.dataset.flipped = 'false';
+                secondCard.dataset.flipped = 'false';
+                firstCard = null;
+                secondCard = null;
+                lock = false;
+              }, 500);
+            }
+          });
+          cards.push(card);
+          grid.appendChild(card);
+        });
+
+        gameStage.appendChild(grid);
+
+        currentTimer = setInterval(() => {
+          timeLeft -= 1;
+          if (timeLeft <= 0) {
+            timeLeft = 0;
+            clearInterval(currentTimer);
+            updateHud(score, timeLeft, 'Done', Math.min(100, (score / 12) * 100));
+            return;
+          }
+          updateHud(score, timeLeft, 'Match', Math.min(100, (score / 12) * 100));
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>
